@@ -8,9 +8,12 @@
 
 // @todo: Вывести карточки на страницу
 
+import {initialCards} from './cards.js';
 
 const placesList = document.querySelector('.places__list');
 const cardTemplate = document.querySelector("#card-template").content;
+
+
 
 function getCard(item, deleteCard) {
     const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
