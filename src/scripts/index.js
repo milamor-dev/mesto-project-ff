@@ -21,6 +21,8 @@ const popupImg = document.querySelector('.popup__image');
 const popuCaption = document.querySelector('.popup__caption');
 const popupImage = document.querySelector('.popup_type_image');
 
+const popupList = document.querySelectorAll('.popup');
+
 function renderCard(cardData) {   
     cardsContainer.append(createCard(cardData, deleteCard, likeCard, openImagePopup));
 }
@@ -47,7 +49,7 @@ function openProfilePopup() {
 
 openProfileEditPopupButton.addEventListener('click', openProfilePopup);
 
-setCloseModalByClickListeners(document.querySelectorAll('.popup'));
+setCloseModalByClickListeners(popupList);
 
 formEditProfile.addEventListener('submit', (evt) => {handleEditProfileFormSubmit(evt, popupEdit)});
 

@@ -1,7 +1,7 @@
 export {handleEditProfileFormSubmit, handleAddCardFormSubmit};
 
 import {createCard, deleteCard, likeCard} from './card.js';
-import {cardsContainer, formNewCard, pageName, pageDescription} from './index.js';
+import {cardsContainer, formNewCard, pageName, pageDescription, openImagePopup} from './index.js';
 import {closePopup} from './modal.js';
 
 const nameInput = document.querySelector('.popup__input_type_name');
@@ -27,7 +27,7 @@ function handleAddCardFormSubmit (evt, popup) {
         link: placeLinkInput.value,
     };
 
-    const newCard = createCard(cardData, deleteCard, likeCard);
+    const newCard = createCard(cardData, deleteCard, likeCard, openImagePopup);
 
     cardsContainer.prepend(newCard);
 
