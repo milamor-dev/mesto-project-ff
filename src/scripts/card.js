@@ -19,11 +19,11 @@ function createCard(cardData, deleteCard, likeCard, openImagePopup) {
     });
 
     likeButton.addEventListener('click', () => {likeCard(likeButton)});
-  
+
     cardImg.addEventListener('click', () => {
         openImagePopup (cardData);
     });
- 
+
     return newCard;
 }
 

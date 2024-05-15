@@ -1,4 +1,4 @@
-export {handleEditProfileFormSubmit, handleAddCardFormSubmit};
+export {handleEditProfileFormSubmit, handleAddCardFormSubmit, nameInput, jobInput};
 
 import {createCard, deleteCard, likeCard} from './card.js';
 import {cardsContainer, formNewCard, pageName, pageDescription, openImagePopup} from './index.js';
@@ -30,7 +30,7 @@ function handleAddCardFormSubmit (evt, popup) {
     const newCard = createCard(cardData, deleteCard, likeCard, openImagePopup);
 
     cardsContainer.prepend(newCard);
-
-    formNewCard.reset();
+    
+    formNewCard.reset();        
     closePopup(popup);  
 }
