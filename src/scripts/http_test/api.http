@@ -1,0 +1,15 @@
+GET https://nomoreparties.co/v1/wff-cohort-13/users/me
+Authorization: ad0dc748-c960-4952-aca3-c228541ba83f
+
+###
+GET https://nomoreparties.co/v1/wff-cohort-13/cards
+Authorization: ad0dc748-c960-4952-aca3-c228541ba83f
+
+###
+POST https://nomoreparties.co/v1/wff-cohort-13/cards
+Authorization: ad0dc748-c960-4952-aca3-c228541ba83f
+
+{
+    "name": "trulala",
+    "link": "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg"
+}
