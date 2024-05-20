@@ -1,11 +1,11 @@
 import {initialCards} from './cards.js';
 import {createCard, deleteCard, likeCard} from './card.js';
 import {openPopup, setCloseModalByClickListeners} from './modal.js';
-import {handleEditProfileFormSubmit, handleAddCardFormSubmit, editLocalProfile} from './forms.js';
+import {editLocalAvatar, handleEditProfileFormSubmit, handleAddCardFormSubmit, editLocalProfile, handleChangeAvatarFormSubmit} from './forms.js';
 import {clearValidation, enableValidation} from './validation.js';
 // import { log10 } from 'core-js/core/number';
 
-export {openImagePopup, formEditProfile, pageName, pageDescription, formNewCard, cardsContainer, createNewCard, editDBProfile};
+export {editDBAvatar, openImagePopup, formEditProfile, pageName, pageDescription, formNewCard, formEditAvatar, cardsContainer, createNewCard, editDBProfile, deleteDBCard, openAvatarPopup, pageAvatar, addDBLike, deleteDBLike};
 
 const cardsContainer = document.querySelector('.places__list');
 
@@ -18,6 +18,12 @@ const formEditProfile = document.forms['edit-profile'];
 const formNewCard = document.forms['new-place'];
 const popupEdit = document.querySelector('.popup_type_edit');
 
+
+//форма обновления аватара
+const formEditAvatar = document.forms['avatar'];
+const pageAvatar = document.querySelector('.profile__image');
+const popupPageAvatar = document.querySelector('.popup_type_avatar');
+
 const popupNewCard = document.querySelector('.popup_type_new-card');
 const popupImg = document.querySelector('.popup__image');
 const popuCaption = document.querySelector('.popup__caption');
@@ -25,7 +31,7 @@ const popupImage = document.querySelector('.popup_type_image');
 
 const popupList = document.querySelectorAll('.popup');
 
-const cardLikeCounter = document.querySelectorAll('.card__like_counter');
+// const cardLikeCounter = document.querySelectorAll('.card__like_counter');
 
 const validationConfig = {
     formSelector: '.popup__form',
@@ -36,11 +42,18 @@ const validationConfig = {
     errorClass: 'form__input-error_active'
     };
 
-function renderCard(cardData) {   
-    cardsContainer.append(createCard(cardData, deleteCard, likeCard, openImagePopup));
+function renderCard(cardData, deleteCard, currentUserId) {   
+    cardsContainer.append(createCard(cardData, deleteCard, likeCard, openImagePopup, currentUserId));
 };
 
 // initialCards.forEach((cardData) => {renderCard(cardData, deleteCard)});
+
+//аватар
+function openAvatarPopup () {
+    clearValidation(formEditAvatar, validationConfig);
+    formEditAvatar.reset(); 
+    openPopup(popupPageAvatar);
+}
 
 function openImagePopup (img) {
     popupImg.src = img.link;
@@ -55,6 +68,14 @@ openAddCardPopupButton.addEventListener('click', () => {
     formNewCard.reset(); 
     openPopup(popupNewCard);
 });
+
+// аватар
+pageAvatar.addEventListener('click', openAvatarPopup);
+
+formEditAvatar.addEventListener('submit', (evt) => {handleChangeAvatarFormSubmit(evt, popupPageAvatar)});
+// аватар
+
+
 
 function openProfilePopup() {    
     formEditProfile.elements.name.value = pageName.textContent;
@@ -75,7 +96,15 @@ enableValidation(validationConfig);
 
 // это в  api.js
 
-const myToken = 'ad0dc748-c960-4952-aca3-c228541ba83f'
+const myToken = 'ad0dc748-c960-4952-aca3-c228541ba83f';
+
+const config = {
+    baseUrl: 'https://nomoreparties.co/v1/wff-cohort-13',
+    headers: {
+        authorization: 'ad0dc748-c960-4952-aca3-c228541ba83f',
+        'Content-Type': 'application/json'
+    }
+    }
 
 function handleRequest (res) 
 {
@@ -104,11 +133,32 @@ function getUsersInfo()
     .then(handleRequest)
 };
 
+// Постановка и снятие лайка
+
+const addDBLike = (cardId) => {
+    return fetch(`${config.baseUrl}/cards/likes/${cardId}`, 
+    {
+        method: "PUT",
+        headers: config.headers
+    })
+        .then(handleRequest)
+}
+
+const deleteDBLike = (cardId) => {
+    return fetch(`${config.baseUrl}/cards/likes/${cardId}`, 
+    {
+        method: "DELETE",
+        headers: config.headers
+    })
+        .then(handleRequest)
+}
+
 //Загрузка карточек с сервера
 function getAllCards ()
 {
     return fetch ('https://nomoreparties.co/v1/wff-cohort-13/cards', 
         {
+            method: "GET",
             headers: 
             {
                 authorization: myToken
@@ -119,7 +169,6 @@ function getAllCards ()
 }
 
 // Добавление новой карточки
-
 function createNewCard (newCard) 
 {
     return fetch ('https://nomoreparties.co/v1/wff-cohort-13/cards',
@@ -131,13 +180,13 @@ function createNewCard (newCard)
         },
         body: JSON.stringify({            
             name: newCard.name,
-            link: newCard.link
+            link: newCard.link,
         })
     })
+    .then(handleRequest)
 }
 
 // Редактирование профиля
-
 function editDBProfile (newProfile) 
 {
     return fetch ('https://nomoreparties.co/v1/wff-cohort-13/users/me',
@@ -154,20 +203,55 @@ function editDBProfile (newProfile)
     })
 }
 
+// Удаление карточки
+function deleteDBCard (cardId)
+{
+    return fetch (`https://nomoreparties.co/v1/wff-cohort-13/cards/${cardId}`, 
+        {
+            method: "DELETE",
+            headers: 
+            {
+                "Content-Type": "application/json",
+                authorization: myToken
+            }            
+        }
+    )  
+}
+
+// Обновление аватара пользователя
+function editDBAvatar (newAvatar) 
+{
+    return fetch ('https://nomoreparties.co/v1/wff-cohort-13/users/me/avatar',
+    {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            authorization: myToken
+        },
+        body: JSON.stringify({            
+            avatar: newAvatar.avatar
+        })
+    })
+}
+
+
 // это в index
 
 Promise.all([getUsersInfo(), getAllCards()])
 .then(([userInfo, allCards]) => 
 {
-    // console.log(userInfo, allCards);
-    allCards.forEach((cardData) => {renderCard(cardData, deleteCard)});
+    allCards.forEach((cardData) => {renderCard(cardData, deleteCard, userInfo._id)});
     editLocalProfile({
         name: userInfo.name,
-        about: userInfo.about
+        about: userInfo.about,
     });
+    editLocalAvatar({
+        avatar: userInfo.avatar,
+    })
     
 })
 // .catch((err) => 
 // {
 //     renderError(`Ошибка: ${err}`);
 // }); 
+

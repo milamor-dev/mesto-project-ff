@@ -15,7 +15,8 @@
   </header>
   <main class="content">
     <section class="profile page__section">
-      <div class="profile__image" style="background-image: url(<%=require('./images/avatar.jpg')%>);"></div>
+      <div class="profile__image"></div>
+      
       <div class="profile__info">
         <h1 class="profile__title">Жак-Ив Кусто</h1>
         <button class="profile__edit-button" type="button"></button>
@@ -105,6 +106,29 @@
   </div>
 </div>
 
+<!-- форма для обновления аватара -->
+<div class="popup popup_is-animated popup_type_avatar">
+  <div class="popup__content popup__content_avatar">
+    <button type="button" class="popup__close"></button>
+    <h3 class="popup__title">Обновить аватар</h3>
+    <form class="popup__form" name="avatar" novalidate>
+      <input 
+        type="url" 
+        name="link" 
+        id="link-input" 
+        class="popup__input popup__input_type_avatar_url" 
+        placeholder="Ссылка на новый аватар" 
+        type="url" 
+      required>
+      <span class="link-input-error form__input-error"></span>
+      <button type="submit" class="button popup__button">Сохранить</button>
+    </form>
+  </div>
+</div>
+<!-- форма для обновления аватара -->
+
+
+
 <template id="card-template">
   <li class="places__item card">
     <img class="card__image" src="" alt="" />
@@ -114,7 +138,7 @@
       </h2>
       <div class="card__like_container">
         <button type="button" class="card__like-button"></button>
-        <span class="card__like_counter">1</span>
+        <span class="card__like_counter"></span>
       </div>
     </div>
   </li>
