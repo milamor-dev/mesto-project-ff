@@ -1,11 +1,12 @@
-export {editLocalAvatar, handleEditProfileFormSubmit, handleAddCardFormSubmit, nameInput, jobInput, editLocalProfile, handleChangeAvatarFormSubmit};
+export {renderLoading, editLocalAvatar, handleEditProfileFormSubmit, handleAddCardFormSubmit, editLocalProfile, handleChangeAvatarFormSubmit};
 
 import {createCard, deleteCard, likeCard} from './card.js';
-import {cardsContainer, formNewCard, pageName, pageDescription, openImagePopup, createNewCard, editDBProfile, formEditAvatar, openAvatarPopup, editDBAvatar, pageAvatar} from './index.js';
+import {cardsContainer, formNewCard, pageName, pageDescription, openImagePopup, formEditAvatar} from './index.js';
 import {closePopup} from './modal.js';
+import {createNewDBCard, editDBProfile, editDBAvatar} from './api.js';
 
 const nameInput = document.querySelector('.popup__input_type_name');
-const jobInput = document.querySelector('.popup__input_type_description');
+const AboutInput = document.querySelector('.popup__input_type_description');
 
 const placeNameInput = document.querySelector('.popup__input_type_card-name');
 const placeLinkInput = document.querySelector('.popup__input_type_url');
@@ -14,10 +15,11 @@ const avatarImg = document.querySelector('.profile__image');
 
 function handleEditProfileFormSubmit (evt, popup) {
     evt.preventDefault();
+    renderLoading(popup, true);
 
     const profileInfo = {
         name: nameInput.value,
-        about: jobInput.value,
+        about: AboutInput.value,
     };
 
     editLocalProfile(profileInfo);
@@ -34,18 +36,22 @@ function editLocalProfile (profileInfo) {
 
 function handleAddCardFormSubmit (evt, popup) {
     evt.preventDefault();
+    renderLoading(popup, true);
 
     const cardData = {
         name: placeNameInput.value,
         link: placeLinkInput.value,
     };
 
-    Promise.all([createNewCard(cardData)])
+    Promise.all([createNewDBCard(cardData)])
     .then(([cardDBData]) => {
         const newCard = createCard(cardDBData, deleteCard, likeCard, openImagePopup, cardDBData.owner._id);
 
         cardsContainer.prepend(newCard);
     })
+    .catch((err) => {
+        console.log(err); // выводим ошибку в консоль
+    }); 
 
     formNewCard.reset();        
     closePopup(popup);    
@@ -58,6 +64,7 @@ function editLocalAvatar (avatarData) {
 
 function handleChangeAvatarFormSubmit (evt, popup) {
     evt.preventDefault();
+    renderLoading(popup, true);
 
     const avatarData = {
         avatar: avatarLinkInput.value,
@@ -69,4 +76,15 @@ function handleChangeAvatarFormSubmit (evt, popup) {
 
     formEditAvatar.reset();        
     closePopup(popup);    
+}
+
+// Улучшенный UX всех форм
+
+function renderLoading (popup, isLoading) {
+    const popupButton = popup.querySelector('.popup__button');
+    if (isLoading) {
+        popupButton.textContent = 'Сохранение...';
+    } else {
+        popupButton.textContent = 'Сохранить';
+    }
 }

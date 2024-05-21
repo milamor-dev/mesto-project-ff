@@ -1,11 +1,8 @@
 export {deleteCard, likeCard, createCard};
-import {deleteDBCard, addDBLike, deleteDBLike} from './index.js';
+import {deleteDBLike, addDBLike, deleteDBCard} from './api.js';
 
 const cardTemplate = document.querySelector("#card-template").content;
 const cardElement = cardTemplate.querySelector('.card');
-// const deleteButton = cardElement.querySelector('.card__delete-button');
-// const myID = '98fe28a75a7544599f5cab51'
-
 
 function createCard(cardData, deleteCard, likeCard, openImagePopup, currentUserId) {
     const newCard = cardElement.cloneNode(true);
@@ -21,10 +18,14 @@ function createCard(cardData, deleteCard, likeCard, openImagePopup, currentUserI
     cardLikeCounter.textContent = cardData.likes.length;
 
     const ownerID = cardData.owner._id;
-
     if (ownerID !== currentUserId) {
         deleteButton.remove();
     }   
+
+    const userIdLiked = cardData.likes.some((like) => like._id === currentUserId);
+    if (userIdLiked) {        
+        likeButton.classList.toggle('card__like-button_is-active');
+    }
 
     deleteButton.addEventListener('click', () => {
         deleteCard(newCard, cardData._id);
@@ -50,4 +51,7 @@ function likeCard(button, cardId, cardLikeCounter) {
         cardLikeCounter.textContent = data.likes.length;
         button.classList.toggle('card__like-button_is-active'); 
     })
+    .catch((err) => {
+        console.log(err); // выводим ошибку в консоль
+    }); 
 }
