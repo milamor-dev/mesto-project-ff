@@ -25,7 +25,7 @@ function setCloseModalByClickListeners(popupList) {
             closePopup(popup);
         });
     
-        popup.addEventListener('click', (evt) => {
+        popup.addEventListener('mousedown', (evt) => {
             if(evt.target.classList.contains('popup')) {
                 closePopup(popup);
             }
