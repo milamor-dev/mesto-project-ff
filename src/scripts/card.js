@@ -47,11 +47,10 @@ function deleteCard(cardElement, cardId) {
 
 function likeCard(button, cardId, cardLikeCounter) {
     const likeDBButton = button.classList.contains('card__like-button_is-active') ? deleteDBLike : addDBLike;
-    likeDBButton(cardId).then((data) => {
+    likeDBButton(cardId)
+    .then((data) => {
         cardLikeCounter.textContent = data.likes.length;
         button.classList.toggle('card__like-button_is-active'); 
     })
-    .catch((err) => {
-        console.log(err); // выводим ошибку в консоль
-    }); 
+    .catch(err => console.log(`Ошибка.....: ${err}`));
 }

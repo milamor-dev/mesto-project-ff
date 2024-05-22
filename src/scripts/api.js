@@ -24,10 +24,7 @@ function getUsersInfo()
             headers: config.headers
         }
     )
-    .then(handleRequest)
-    .catch((err) => {
-        console.log(err); // выводим ошибку в консоль
-        }); 
+    .then(handleRequest); 
 }
 
 //Загрузка карточек с сервера
@@ -39,10 +36,7 @@ function getAllCards ()
             headers: config.headers
         }
     )
-    .then(handleRequest)
-    .catch((err) => {
-        console.log(err); // выводим ошибку в консоль
-        }); 
+    .then(handleRequest); 
 }
 
 // Добавление новой карточки
@@ -57,10 +51,7 @@ function createNewDBCard (newCard)
             link: newCard.link,
         })
     })
-    .then(handleRequest)
-    .catch((err) => {
-        console.log(err); // выводим ошибку в консоль
-        }); 
+    .then(handleRequest); 
 }
 
 // Постановка и снятие лайка
@@ -70,10 +61,7 @@ const addDBLike = (cardId) => {
         method: "PUT",
         headers: config.headers
     })
-        .then(handleRequest)
-        .catch((err) => {
-            console.log(err); // выводим ошибку в консоль
-        }); 
+        .then(handleRequest); 
 }
 
 const deleteDBLike = (cardId) => {
@@ -82,10 +70,7 @@ const deleteDBLike = (cardId) => {
         method: "DELETE",
         headers: config.headers
     })
-        .then(handleRequest)
-        .catch((err) => {
-            console.log(err); // выводим ошибку в консоль
-        }); 
+        .then(handleRequest);
 }
 
 // Удаление карточки
@@ -96,7 +81,8 @@ function deleteDBCard (cardId)
             method: "DELETE",
             headers: config.headers          
         }
-    )  
+    ) 
+    .then(handleRequest); 
 }
 
 // Редактирование профиля
@@ -111,6 +97,7 @@ function editDBProfile (newProfile)
             about: newProfile.about
         })
     })
+    .then(handleRequest);
 }
 
 
@@ -125,4 +112,5 @@ function editDBAvatar (newAvatar)
             avatar: newAvatar.avatar
         })
     })
+    .then(handleRequest);
 }
